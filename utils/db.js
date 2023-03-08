@@ -1,5 +1,6 @@
 import { MongoClient } from 'mongodb';
 import { env } from 'process';
+import { createHash } from 'crypto';
 
 class DBClient {
   constructor () {
@@ -25,6 +26,19 @@ class DBClient {
     this.Mydb = this.client.db();
     const collection = this.Mydb.collection('files');
     return collection.countDocuments();
+  }
+
+  async chekEmail (email) {
+    this.Mydb = this.client.db();
+    const collection = this.Mydb.collection('users');
+    return collection.findOne({ email });
+  }
+
+  async createNewUser (email, _password) {
+    this.Mydb = this.client.db();
+    const collection = this.Mydb.collection('users');
+    const password = createHash('sha1').update(_password).digest('hex');
+    return collection.insertOne({ email, password });
   }
 }
 const dbClient = new DBClient();
