@@ -19,6 +19,14 @@ class UsersController {
       }
     }
   }
+
+  static async getMe (request, response) {
+    const { usr } = request;
+    delete usr.password;
+    usr.id = usr._id;
+    delete usr._id;
+    response.status(200).json(usr).end();
+  }
 }
 
 export default UsersController;
