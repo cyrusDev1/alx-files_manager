@@ -4,7 +4,7 @@ import redisClient from '../utils/redis';
 import UtilController from './UtilController';
 import dbClient from '../utils/db';
 
-export default class AuthController {
+class AuthController {
   static async getConnect (request, response) {
     try {
       const encodeAuthPair = request.headers.authorization.split(' ')[1];
@@ -30,3 +30,4 @@ export default class AuthController {
     response.status(204).end();
   }
 }
+export default AuthController;
