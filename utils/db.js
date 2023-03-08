@@ -40,6 +40,27 @@ class DBClient {
     const password = createHash('sha1').update(_password).digest('hex');
     return collection.insertOne({ email, password });
   }
+
+  async filterUser(filters) {
+    const myDB = this.myClient.db();
+    const myCollection = myDB.collection('users');
+    if ('_id' in filters) {
+      // eslint-disable-next-line no-param-reassign
+      filters._id = ObjectId(filters._id);
+    }
+    return myCollection.findOne(filters);
+  }
+
+  async filterFiles(filters) {
+    const myDB = this.myClient.db();
+    const myCollection = myDB.collection('files');
+    const idFilters = ['_id', 'userId', 'parentId'].filter((prop) => prop in filters && filters[prop] !== '0');
+    idFilters.forEach((i) => {
+      // eslint-disable-next-line no-param-reassign
+      filters[i] = ObjectId(filters[i]);
+    });
+    return myCollection.findOne(filters);
+  }
 }
 const dbClient = new DBClient();
 export default dbClient;
